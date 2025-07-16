@@ -9,8 +9,12 @@
       margin: 0;
       padding: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: #e6f0ff;
-      color: #333;
+      background:
+        /* Imagen opcional – pon tu JPG/PNG aquí (o déjalo vacío) */
+        url(https://i.imgur.com/fbKd3t4.png) center/cover no-repeat,
+        /* Fallback gradiente si no hay imagen */
+        linear-gradient(to bottom, #1e2746 0%, #2d3b62 35%, #495c8e 70%, #6b7db5 100%);
+      color: #fff;
       overflow-x: hidden;          /* sin scroll lateral */
     }
     body {
@@ -36,7 +40,10 @@
 
     /* ——— Caja de cada pantalla ——— */
     .slide-box {
-      background: #fff;
+      background: /* Imagen opcional – pon tu JPG/PNG aquí (o déjalo vacío) */
+        url(https://i.imgur.com/fbKd3t4.png) center/cover no-repeat,
+        /* Fallback gradiente si no hay imagen */
+        linear-gradient(to bottom, #1e2746 0%, #2d3b62 35%, #495c8e 70%, #6b7db5 100%);
       border-radius: 20px;
       padding: 30px;
       max-width: 800px;
@@ -57,10 +64,12 @@
       color: #fff;
       cursor: pointer;
     }
-    button:hover { background: #619dc4; }
+    button:hover { background: #c1dfff; }
 
-    #startBtn  { font-size: 18px; background: #34a853; }
-    #moveBtn   { position: absolute; padding: 14px 24px; background: #ff7675; z-index: 999; }
+    #startBtn  { font-size: 18px; background: #5ac8fa; /* azul cielo suave */
+  color: #fff; }
+    #moveBtn   { position: absolute; padding: 14px 24px; background: #bfa0ea; /* lila suave */
+  color: #fff; z-index: 999; }
 
     /* ——— Media (imágenes / iframes) ——— */
     iframe, img {
@@ -73,7 +82,10 @@
     #gameScreen {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: #e6f0ff;
+      background: /* Imagen opcional – pon tu JPG/PNG aquí (o déjalo vacío) */
+        url(https://i.imgur.com/fbKd3t4.png) center/cover no-repeat,
+        /* Fallback gradiente si no hay imagen */
+        linear-gradient(to bottom, #1e2746 0%, #2d3b62 35%, #495c8e 70%, #6b7db5 100%);
       overflow: hidden;            /* sin scroll en el juego */
       flex-direction: column;
       justify-content: center;
