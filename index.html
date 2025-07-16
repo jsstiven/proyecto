@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Detalle para Ti</title>
+  <style>
+    /* ——— Reset y tipografía ——— */
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #e6f0ff;
+      color: #333;
+      overflow-x: hidden;          /* sin scroll lateral */
+    }
+    body {
+      min-height: 100vh;
+      padding: 50px 20px;
+      box-sizing: border-box;
+    }
+
+    /* ——— Contenedor centrado para el botón inicial ——— */
+    .centered {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 80vh;
+    }
+
+    /* ——— Slides y juego (ocultos al cargar) ——— */
+    .slide-box,
+    #gameScreen {
+      display: none;
+    }
+
+    /* ——— Caja de cada pantalla ——— */
+    .slide-box {
+      background: #fff;
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 800px;
+      margin: 0 auto;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
+    }
+
+    /* ——— Botones y títulos ——— */
+    h2 { margin-top: 0; }
+
+    button {
+      margin: 20px;
+      padding: 12px 28px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      background: #7dbbe6;
+      color: #fff;
+      cursor: pointer;
+    }
+    button:hover { background: #619dc4; }
+
+    #startBtn  { font-size: 18px; background: #34a853; }
+    #moveBtn   { position: absolute; padding: 14px 24px; background: #ff7675; z-index: 999; }
+
+    /* ——— Media (imágenes / iframes) ——— */
+    iframe, img {
+      max-width: 90%;
+      border-radius: 10px;
+      margin-top: 15px;
+    }
+
+    /* ——— Pantalla del juego ——— */
+    #gameScreen {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #e6f0ff;
+      overflow: hidden;            /* sin scroll en el juego */
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    #gameMsg {
+      text-align: center;
+      font-size: 20px;
+      margin-top: 100px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🎵 Reproductor de fondo -->
+  <audio id="bgMusic" autoplay></audio>
+
+  <!-- Botón inicial centrado -->
+  <div id="startContainer" class="centered">
+    <button id="startBtn" onclick="startExperience()">🎮 Empezar</button>
+  </div>
+
+  <!-- Caja de pantallas -->
+  <div id="slideBox" class="slide-box">
+    <h2 id="slideTitle"></h2>
+    <div id="slideText"></div>
+    <button id="nextBtn" onclick="nextSlide()">Siguiente</button>
+  </div>
+
+  <!-- Pantalla del juego final -->
+  <div id="gameScreen">
+    <button id="moveBtn" onmouseenter="startMoving()" onmouseleave="stopMoving()" onclick="winGame()">¡Haz clic!</button>
+    <h2 id="gameMsg" style="display:none;"></h2>
+  </div>
+
+  <script>
+    /* ————————————————— Música ————————————————— */
+    const playlist = [
+      "https://files.catbox.moe/jegudw.mp3","https://files.catbox.moe/zzm7bw.mp3"      // cambia por tu segunda canción
+    ];
+    let currentTrack = 0;
+    const audio = document.getElementById("bgMusic");
+
+    function playNext() {
+      if (!playlist.length) return;
+      audio.src = playlist[currentTrack];
+      audio.play().catch(() => {});
+      currentTrack = (currentTrack + 1) % playlist.length;
+    }
+    audio.addEventListener("ended", playNext);
+
+    /* ————————————————— Contenido de las pantallas ————————————————— */
+    const slides = [
+      {
+        title: "Cuando nos conocimos",
+        html: `
+          <p>Oa amor, antes que nada, este regalo es, en esencia, un detalle o gesto romántico por el tiempo que llevamos compartiendo juntos, y esta vez con una de las cosas que mejor se me dan. Entiendo que tal vez pueda exagerar en esto, o en algunas cosas que hago, pero me gusta hacerte sentir que eres especial. Al menos para mí, lo eres.
+
+Debo decir que, cuando planeé hacer esto, al principio dudé, e incluso no sabía si sería mejor un regalo comprado u otra cosa. Pero recordé que llevamos más de año y medio conociéndonos, y por eso quise traerte este detalle con recuerdos. Independientemente de que sean buenos, vergonzosos, divertidos o malos, son momentos importantes en mi vida, porque son el tiempo y las vivencias que he compartido junto a ti.
+
+Quiero que sepas que, aunque no podamos vernos en persona por la distancia que nos separa, nunca dejo de pensar en ti ni de preocuparme por ti.    
+    </p>
+          <img src="https://i.imgur.com/Txkqn9J.png" alt="Imagen bonita" />
+         <p></p>
+          <iframe     src="https://www.twitch.tv/jsstivenvt/clip/RelievedBoxyMallardDxCat-koawdUVEnVnOeOYh"
+            frameborder="0" allowfullscreen="true" scrolling="no"
+            height="300" width="500">
+          </iframe>
+          <p>No sé si recuerdas el día que nos conocimos, y tampoco sé exactamente qué pensaste cuando me viste y me escuchaste decir "Blue Label de Johnnie Walker" XD. Pero en mi caso, no podía parar de reír y pensar: ¿Qué pedo con ella?
+
+Sin embargo, por mi lado recuerdo que seguía con mi vida normal, porque cuando me conociste —a pesar de las pendejadas que hacía— estaba pasando por un momento en el que aceptaba que alguien como yo no podía tener el derecho a ser querido, por más que me esforzara en hacer las cosas bien. Por esa razón hacía directos, para distraerme de ese pensamiento.
+
+Luego, en ese mismo mes en que te conocí, recibí una invitación en VR a un mundo, y fue la escena más XD que haya visto hasta ese momento. No sé si te suena de algo este clip?</p>
+          <iframe     src="https://www.twitch.tv/jsstivenvt/clip/ClearAmazonianNostrilMau5-G-vWJBVJ4IMgWeQw"
+            frameborder="0" allowfullscreen="true" scrolling="no"
+            height="300" width="500">
+          </iframe>
+        `
+      },
+      {
+        title: "Nuestros momentos",
+        html: `
+          <p>He de decir que, cuando empecé a conocerte mejor, nunca se me pasó por la cabeza que seríamos pareja. Es más, lo único que podía pensar era: “Qué chido poder pasar tiempo con ella”, y que, por primera vez en mucho tiempo, me sentía tranquilo, como si todo fuera a ir mejor.
+
+Tal vez hoy en día tenga muchas cosas, pero al estar contigo, puedo decir que, al menos en ese pensamiento, no me equivoqué. </p>
+          <img src="https://i.imgur.com/gHiXADx.png" alt="Imagen bonita" />
+          <p>Luego de un tiempo, y por cosas que pasaron en el mundo de VR —que, aunque admito que sí te estaba molestando, en mi mente nunca se me pasó que haríamos eso ese día—, sin embargo, gracias a eso pude confirmar una cosa: por primera vez en mi vida pude querer a alguien y que el sentimiento fuera recíproco.
+</p>
+      <img src="https://i.imgur.com/s9dGSfO.png" alt="Imagen bonita" />
+<p>
+Pero, para ser sincero, aún seguía con dudas, y cuando me dijiste que sí a ser mi pareja, me sentí como este awebado del video XD.</p>
+          <iframe width="560" height="315"
+            src="https://www.youtube.com/watch?v=otxleZdo978"
+            frameborder="0" allow="accelerometer; autoplay; clipboard-write;
+            encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+          </iframe>
+          <p>Y cuando conocí a los demás, sentí que mi vida iba mejorando de a poco a tu lado. Me enseñaron muchas cosas, además de que es divertido estar con ellos. Tuve mis celos al inicio, claramente; nunca había tenido una pareja y no sabía cómo llevarlo.
+</p>
+      <img src="https://i.imgur.com/v70DWAu.png" alt="Imagen bonita" />
+<p>
+Todo lo que fui haciendo —incluso ahora, en este mismo detalle— lo he hecho sobre la marcha, y aún sigo aprendiendo para ser alguien en quien puedas confiar, sin importar cuál sea el problema; que yo te pueda ayudar.</p>
+          <iframe  src="https://www.twitch.tv/jsstivenvt/clip/PoisedCrowdedLobsterDxAbomb-Y-5LAXGrXmVF0JZF"
+            frameborder="0" allowfullscreen="true" scrolling="no"
+            height="300" width="500">
+          </iframe>
+        `
+      },
+      {
+        title: "Nuestros problemas",
+        html: `
+          <p>Debo decir que, a pesar de todo, lo que más me ha sorprendido de lo nuestro es que casi no hemos peleado. Sí, hemos tenido nuestros problemas —pendejadas que, ya sea porque no me fijé o no capté las indirectas, tú me hiciste notar XD—, y en todas y cada una de esas veces siempre me he arrepentido de haber provocado ese inconveniente. Aunque no hay excusa alguna para eso, debes saber que, lamentablemente, tienes de novio a un pendejo al que la cabeza solo le sirve para negocios, matemáticas, enseñar o programar XD.
+
+No niego que hubo muchas ocasiones en las que pensé: “Mejor cambio mi forma de ser” o “Haré esto”, y tú me dijiste una vez que me querías como era, aun con mis defectos, solo que procurara no mostrarlos o no repetirlos tan seguido. Si soy honesto, en mi vida poco me importaba lo que hacía o el efecto que tuvieran mis palabras en los demás, y una de las cosas que más miedo me ha dado es que, al conocer mi pasado y saber cómo he hecho las cosas, pudieras alejarte. Y míranos: sabes todo de mí, conoces una parte de mi familia; yo conozco una parte de la tuya (tengamos en cuenta que Maki y Yaza los consideras como hermanos, por eso lo digo XD), pero aun así me amas. Por eso considero que podemos lograr lo que queramos juntos y, si tenemos problemas, sabremos cómo darles solución.</p>
+          <img src="https://i.imgur.com/WhJQJnZ.png" alt="Imagen bonita" />
+        `
+      },
+      {
+        title: "Poder verte",
+        html: `
+          <p>Creo que, a lo mejor, tanto texto te pueda abrumar XD, y perdón, la parte artística no se me da muy bien. Pero algo que quiero decir para finalizar es que el otro año por fin podré verte. Sí, tengo muchos asuntos pendientes en mi país, lo que podría hacer que te vea y me demore algunos años más en volver a estar contigo presencialmente. Pero, si todo sale bien, la segunda vez que vaya será para quedarme contigo.
+
+Por eso, lo único que te pediré el otro año será que me esperes un poco. Pienso trabajar duro para que podamos estar tranquilos los dos, juntos. Porque, hasta hace un tiempo, en mi vida no tenía motivación ni razones para continuar. Sonará exagerado, pero es la verdad.
+
+Quiero que sepas que las razones por las que ahora me cuido más, me enfoco en mi trabajo, en los directos, e incluso cuando me levanto cada día, siempre lo hago con el pensamiento de poder estar contigo, riendo o hablando. Contigo siento que gané la lotería. No eres lo que soñaba: eres la persona que siempre necesité en mi vida, y mucho más que un simple sueño.
+
+Te amo mucho, mi vida.
+Y por cierto… hoy tienes dos sorpresas:
+La primera es que lo siguiente será un juego que programé en la U. Es algo sencillo, pero si ganas, tendrás una pista de lo que te daré en persona el próximo año.
+Y la segunda… revisa tu Dólar App y disfruta de una buena hamburguesa.
+
+Te amo. ❤️
+
+</p>
+          <img src="https://i.imgur.com/iwFzcIZ.png" alt="Gracias" />
+        `
+      }
+    ];
+
+    /* ————————————————— Flujo de la experiencia ————————————————— */
+    let slideIndex = 0;
+
+    function startExperience() {
+      playNext();
+      document.getElementById("startContainer").style.display = "none";
+      document.getElementById("slideBox").style.display = "block";
+      showSlide();
+      window.scrollTo(0, 0);
+    }
+
+    function showSlide() {
+      const data = slides[slideIndex];
+      document.getElementById("slideTitle").textContent = data.title;
+      document.getElementById("slideText").innerHTML = data.html;
+      window.scrollTo(0, 0);
+    }
+
+    function nextSlide() {
+      slideIndex++;
+      if (slideIndex < slides.length) {
+        showSlide();
+      } else {
+        document.getElementById("slideBox").style.display = "none";
+        launchGame();
+      }
+    }
+
+    /* ————————————————— Juego del botón ————————————————— */
+    let moveInterval = null;
+
+    function launchGame() {
+      document.body.style.overflow = "hidden";        // sin scroll en el juego
+      document.getElementById("gameScreen").style.display = "flex";
+    }
+
+    function startMoving() {
+      if (moveInterval) return;                       // ya se está moviendo
+      const btn = document.getElementById("moveBtn");
+
+      moveInterval = setInterval(() => {
+        const maxX = window.innerWidth  - btn.offsetWidth;
+        const maxY = window.innerHeight - btn.offsetHeight;
+        btn.style.left = Math.random() * maxX + "px";
+        btn.style.top  = Math.random() * maxY + "px";
+      }, 132);                                        // velocidad 750 ms
+    }
+
+    function stopMoving() {
+      clearInterval(moveInterval);
+      moveInterval = null;
+    }
+
+    function winGame() {
+      stopMoving();
+      document.getElementById("moveBtn").style.display = "none";
+      const msg = document.getElementById("gameMsg");
+      msg.textContent = "Para poder darte ese regalo necesito las medidas de tu dedo anular de tu mano izquierda :3";
+      msg.style.display = "block";
+    }
+  </script>
+</body>
+</html>
